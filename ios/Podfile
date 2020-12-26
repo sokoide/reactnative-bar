@@ -18,7 +18,26 @@ target 'bar' do
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
   use_flipper!
+
+  # M1 Mac support)
+  # - ONLY_ACTIVE_ARCH -> No
+  # - EXCLUDED_ARCHS[sdk=iphonesimulator*] = 'arm64 i386'
+  # - EXCLUDED_ARCHS = 'armv7'
   post_install do |installer|
+    installer.pods_project.build_configurations.each do |build_configuration|
+      build_configuration.build_settings['ONLY_ACTIVE_ARCH'] = 'No'
+      build_configuration.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] ='arm64 i386'
+      build_configuration.build_settings['EXCLUDED_ARCHS'] ='armv7'
+    end
+    installer.aggregate_targets.each do |aggregate_target|
+      aggregate_target.xcconfigs.each do |config_name, config_file|
+        config_file.attributes['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] ='arm64 i386'
+        config_file.attributes['EXCLUDED_ARCHS'] ='armv7'
+        config_file.save_as(aggregate_target.xcconfig_path(config_name))
+      end
+    end
+    # Note that if you have use_frameworks! enabled, Flipper will not work and
+    # you should disable these next few lines.
     flipper_post_install(installer)
   end
 end
