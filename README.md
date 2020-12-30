@@ -14,9 +14,13 @@
 
 ```
 # dont use rbenv's ruby 2.7.0, but use ruby 2.6 comes with Big Sur
+# rbenv's ruby 3.0.0 can run 'pod install', but 'pod update' crashes.
+#
 # remove cocoapods and ffi if installed
+#
 sudo arch -x86_64 gem install cocoapods
 sudo arch -x86_64 gem install ffi
+yarn
 cd ios
 arch -x86_64 pod install # or arch -x86_64 pod update
 ```
